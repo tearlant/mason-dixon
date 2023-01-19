@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prototype</title>
+	<!-- Font Awesome -->
+	<link
+	  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+	  rel="stylesheet"
+	/>
+	<!-- Google Fonts -->
+	<link
+	  href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+	  rel="stylesheet"
+	/>
+	<!-- MDB -->
+	<link
+	  href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.css"
+	  rel="stylesheet"
+	/>
+	<!-- MDB -->
+	<script
+	  type="text/javascript"
+	  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js"
+	></script>
+</head>
+
+<body>
+    <main class="my-5 no-gutters">
+        <div class="container no-gutters" style="max-width:1500px;">
+            <section class="text-center no-gutters">
+                <div class="row no-gutters">
+                    <div class="col-xl-8 mb-4">
+                        <div class="card">
+                            <div class="card-body" style="align-content:center;">
+                                <p class="card-text">The map will appear here when the data loads. Zoom and scroll, and the regions should update automatically.</p>
+                                {% raw scr %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 mb-4">
+                        <h4 class="mb-1"><strong>MasonDixon</strong></h4>
+                        <p>&copy;2022-2023 T.J. Anthony</p>
+                        <div class="card">
+                            <div class="card-body">
+                                <p>The problem: you have a list of cities (or longitude/latitude coordinates) with corresponding values. How do you best colour a map to visualize this data?</p>
+                                <p>On the one hand, we do not want too many large regions without cities. Conversely, if too many cities or population centres are bunched into a single region, it can skew averages and make the map misleading.</p>
+                                <p>MasonDixon is a geographic engine that combines geospatial, mathematical, and statistical methods to divide maps on the fly. For example, as the user zooms and pans, an algorithm divides the field of view into regions such that there are not too many population centres in a single region.</p>
+                                <form id="updater" action="http://localhost:8888/click" method="post">
+                                    <input class="btn btn-primary" type="submit" value="Update Data"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row no-gutters">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Citations</h5>
+                            <p class="card-text">Made with Natural Earth. Free vector and raster map data @ <a class="card-text" href="https://www.naturalearthdata.com">naturalearthdata.com</a></p>
+                            <p class="card-text">Bokeh: Python library for interactive visualization @ <a class="card-text" href="https://bokeh.org/">https://bokeh.org/</a></p>
+                            <p class="card-text"> GeoPandas: Python tools for geographic data @ <a class="card-text" href="https://github.com/Geopandas/Geopandas">https://github.com/Geopandas/Geopandas</a></p>
+                            <p class="card-text"> Tornado Web Server @ <a class="card-text" href="https://www.tornadoweb.org/">https://www.tornadoweb.org/</a></p>
+                            <p class="card-text"> ColorCET: Good Colour Maps by Peter Kovesi @ <a class="card-text" href="https://colorcet.com/">https://colorcet.com/</a></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!--Main layout-->
+
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+        &copy;2022-2023 Tearlach J. Anthony
+        <!--a class="text-dark" href="https://mdbootstrap.com/">Tearlach J. Anthony</a-->
+    </div>
+
+    <script>
+        function collectData(currentForm) {
+            return new FormData(currentForm);
+        }
+
+        function setOptions(currentForm) {
+            return { method: 'post', body: collectData(currentForm) };
+        }
+
+        function sendForm(currentForm) {
+            return fetch(currentForm.action, setOptions(currentForm));
+        }
+
+        function onSubmit(event) {
+            event.preventDefault();
+            const { currentTarget } = event;
+            sendForm(currentTarget);
+        }
+
+        form = document.getElementById('updater');
+        form.addEventListener('submit', onSubmit);
+
+        // Maybe overkill, since it fires when navigating out/refreshing
+        window.onbeforeunload = closingCode;
+        function closingCode() {
+            fetch("http://localhost:8888/exit", { method: 'post', body: {} })
+            return null;
+        }
+    </script>
+</body>
+</html>
