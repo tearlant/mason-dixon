@@ -2,8 +2,9 @@ import asyncio
 import logging
 import math
 import reactivex
-import bokeh.palettes
 import pickle
+import bokeh.palettes as bp
+import colorcet as cc
 
 from bokeh.events import RangesUpdate, Reset
 from bokeh.plotting import figure
@@ -12,16 +13,14 @@ from shapely.geometry import Point
 from tornado.websocket import websocket_connect
 from bokeh.layouts import row, column
 
-import colorcet as cc
-
-import geographic_engine.municipal_data_utility as mun_util
-from geographic_engine import map_data_creator, coordinate_utility
-from geographic_engine.data_provider import DataProvider
-from geographic_engine.map_data_creator import render_full_map
-from map_creation import request_city_data_from_server
+import mason_dixon.municipal_data_utility as mun_util
+from mason_dixon import coordinate_utility
+from mason_dixon.data_provider import DataProvider
+from mason_dixon.map_data_creator import render_full_map
+from client_side_utility import request_city_data_from_server
 
 
-def bokeh_app(doc, data_provider: DataProvider):
+def bokeh_app(doc, cfg, data_provider: DataProvider):
 
     needs_update = True
     ready_for_rerender = reactivex.subject.Subject()
@@ -31,12 +30,12 @@ def bokeh_app(doc, data_provider: DataProvider):
     ws_conn_city_update_url = "ws://localhost:8888/get_cities"
     ws_conn_city_update = None
 
-    # TODO: Fix this
+    # TODO: Clean this up (the values are overwritten on the initial server call anyway)
     upper_left_merc = (10000000, 24000000)
     lower_right_merc = (16000000, 29000000)
 
-    box_factor = 35  # TODO: Take as an input or config parameter
-    city_box_proportion = 0.035
+    box_factor = cfg["box_factor"]
+    city_box_proportion = cfg["city_box_proportion"]
 
     city_array = data_provider.cities_dataframe_mercator
     region_array = data_provider.region_dataframe
@@ -143,7 +142,7 @@ def bokeh_app(doc, data_provider: DataProvider):
         y_range_dr = DataRange1d(start=y_range[0], end=y_range[1])
 
         rect_tools = "box_zoom,pan,wheel_zoom,reset,hover,save"
-        initial_height = 500
+        initial_height = cfg["map_height"]
 
         p = figure(
             title="Aggregated units", tools=rect_tools, x_range=x_range_dr, y_range=y_range_dr,
@@ -231,16 +230,18 @@ def bokeh_app(doc, data_provider: DataProvider):
         await initialize()
 
         # TODO: Clean this up
-        upper_left = (-17.541988843581105, 64.48827612235075)  # lon, lat
-        lon = upper_left[0]
-        lat = upper_left[1]
-        aspect_ratio = 1.514
-        zoom = 40  # degrees of longitude
+        #upper_left = (-17.541988843581105, 64.48827612235075)  # lon, lat
+        #lon = upper_left[0]
+        #lat = upper_left[1]
+        #aspect_ratio = 1.514
+        #zoom = 40  # degrees of longitude
+        lon = cfg["initial_lon_wgs"]
+        lat = cfg["initial_lat_wgs"]
+        aspect_ratio = cfg["aspect_ratio"]
+        zoom = cfg["zoom"]
 
-        #palette = bokeh.palettes.Viridis11
-        #palette = bokeh.palettes.PuOr11
-        #palette = cc.fire
-        palette = cc.CET_L16
+        # Good palettes are bp.Viridis11, cc.fire, cc.CET_L5, and cc.CET_L16
+        palette = eval(f"{cfg['palette']}")
 
         p, table = await produce_map(lon, lat, aspect_ratio, zoom, box_factor, city_box_proportion, palette)
         r = row(p, table)

@@ -1,0 +1,21 @@
+# Common parameters
+# Latitude and longitude are WGS coordinates of the initial upper left corner of the map.
+# 'zoom' is the number of longitude meridians initially spanned by the map
+initial_lon_wgs: -17.541988843581105
+initial_lat_wgs: 64.48827612235075
+aspect_ratio: 1.514
+zoom: 40
+# Server specific parameters
+chunk_size: 40
+bokeh_server_path: localhost:5006
+websocket_origins:
+  - localhost:8888
+  - www.tearlant.com
+  - tearlant.com
+# Client specific parameters
+box_factor: 35
+city_box_proportion: 0.035
+map_height: 500
+tornado_server_path: localhost:8888
+# For a palette in the ColorCET package, prepend "cc." For one in Bokeh, prepend "bp."
+palette: cc.CET_L5
