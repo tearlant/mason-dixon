@@ -1,5 +1,5 @@
 # mason-dixon
-##A library for optimally dividing maps
+## A library for optimally dividing maps
 
 For a live demonstration of how the main algorithm works, please visit www.tearlant.com/mason-dixon
 
