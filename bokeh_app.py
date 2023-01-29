@@ -147,7 +147,7 @@ def bokeh_app(doc, cfg, data_provider: DataProvider):
         p = figure(
             title="Aggregated units", tools=rect_tools, x_range=x_range_dr, y_range=y_range_dr,
             x_axis_type="mercator", y_axis_type="mercator",
-            tooltips=[("Name", "@name"), ("Rate", "@rate")],
+            tooltips=[("Name", "@name"), ("Rate", "@rate{(0.0)}")],
             width=math.ceil(initial_height / ar), height=initial_height
         )
 
@@ -229,12 +229,6 @@ def bokeh_app(doc, cfg, data_provider: DataProvider):
         nonlocal rerender_callback_id, polling_callback_id
         await initialize()
 
-        # TODO: Clean this up
-        #upper_left = (-17.541988843581105, 64.48827612235075)  # lon, lat
-        #lon = upper_left[0]
-        #lat = upper_left[1]
-        #aspect_ratio = 1.514
-        #zoom = 40  # degrees of longitude
         lon = cfg["initial_lon_wgs"]
         lat = cfg["initial_lat_wgs"]
         aspect_ratio = cfg["aspect_ratio"]
