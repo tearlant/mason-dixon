@@ -47,6 +47,7 @@
                                 <p>On the one hand, we do not want too many large regions without cities. Conversely, if too many cities or population centres are bunched into a single region, it can skew averages and make the map misleading.</p>
                                 <p>MasonDixon is a geographic engine that combines geospatial, mathematical, and statistical methods to divide maps on the fly. For example, as the user zooms and pans, an algorithm divides the field of view into regions such that there are not too many population centres in a single region.</p>
                                 <form id="updater" action="http://localhost:8888/click" method="post">
+                                    {% module xsrf_form_html() %}
                                     <input class="btn btn-primary" type="submit" value="Update Data"/>
                                 </form>
                             </div>
@@ -73,16 +74,22 @@
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
         &copy;2022-2023
         <a class="text-dark" href="https://tearlant.com/">The Algorithms Guy</a>
-		<!--a class="text-dark" href="https://tearlant.com/">Tearlach J. Anthony</a-->
     </div>
 
     <script>
+        function getCookie(name) {
+            var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+            return r ? r[1] : undefined;
+        }
+
         function collectData(currentForm) {
             return new FormData(currentForm);
         }
 
         function setOptions(currentForm) {
-            return { method: 'post', body: collectData(currentForm) };
+            var form = collectData(currentForm);
+            form.append("session-uid", getCookie("session-uid"))
+            return { method: "post", mode: "no-cors", body: form, credentials: "include" };
         }
 
         function sendForm(currentForm) {
@@ -101,7 +108,9 @@
         // Maybe overkill, since it fires when navigating out/refreshing
         window.onbeforeunload = closingCode;
         function closingCode() {
-            fetch("http://localhost:8888/exit", { method: 'post', body: {} })
+            var req_body = new FormData();
+            req_body.append("session-uid", getCookie("session-uid"))
+            fetch("https://www.tearlant.com/mason-dixon/exit", { method: "post", mode:"no-cors", body: req_body, credentials: "include" });
             return null;
         }
     </script>
