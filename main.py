@@ -118,6 +118,13 @@ class ExitHandler(tornado.web.RequestHandler):
     def data_received(self, chunk):
         pass
 
+    def set_default_headers(self):
+        self.set_header("Content-Type", 'application/json')
+        self.set_header("Access-Control-Allow-Origin", self.request.headers["Origin"])
+        self.set_header("Access-Control-Allow-Credentials", "true")
+        self.set_header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization")
+        self.set_header("Access-Control-Allow-Methods", "PUT,GET,POST,OPTIONS")
+
     # When the user closes the browser/tab, it triggers closure of the Tornado session but not the Bokeh session.
     # This can lead to a memory leak because there is an open websocket connection.
     # Set flag so that the Bokeh server sees the closure on the next poll for data, and can properly clean up.
@@ -132,6 +139,10 @@ class ButtonHandler(tornado.web.RequestHandler):
 
     def set_default_headers(self):
         self.set_header("Content-Type", 'application/json')
+        self.set_header("Access-Control-Allow-Origin", self.request.headers["Origin"])
+        self.set_header("Access-Control-Allow-Credentials", "true")
+        self.set_header("Access-Control-Allow-Headers", "X-Requested-With,_xsrf,Content-Type,Authorization")
+        self.set_header("Access-Control-Allow-Methods", "PUT,GET,POST,OPTIONS")
 
     def get(self):
         # TODO: Fail gracefully
@@ -141,6 +152,7 @@ class ButtonHandler(tornado.web.RequestHandler):
     def post(self):
         logging.debug("Updating on the next cycle.")
         session_uid = self.get_cookie("session-uid")
+        print(session_uid)
         mark_session_for_updates(session_uid)
 
 
