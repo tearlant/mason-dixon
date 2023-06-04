@@ -79,7 +79,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def get(self):
         uid = str(uuid.uuid4())
-        self.set_cookie("session-uid", uid)
+        logging.info('Session = ' + uid)
         plotting_caches[uid] = {
             'needs_update': False,
             'update_counter': 1,
@@ -111,7 +111,7 @@ class BaseHandler(tornado.web.RequestHandler):
             logging.debug("New Bokeh session id: " + mysession.id)
             plotting_caches[uid]['bokeh_session_id'] = mysession.id
             script = server_session(session_id=mysession.id, url=f"http://{cfg['bokeh_server_path']}/bokeh_app")
-            self.render("bootstrap_page.html", scr=script, username='', api_call_successful=False, api_call_data=None, distance=None, airport_code=None)
+            self.render("bootstrap_page.html", scr=script, guid=uid, username='', api_call_successful=False, api_call_data=None, distance=None, airport_code=None)
 
 
 class ExitHandler(tornado.web.RequestHandler):
@@ -129,7 +129,7 @@ class ExitHandler(tornado.web.RequestHandler):
     # This can lead to a memory leak because there is an open websocket connection.
     # Set flag so that the Bokeh server sees the closure on the next poll for data, and can properly clean up.
     def post(self):
-        session_uid = self.get_cookie("session-uid")
+        session_uid = self.get_argument("session-uid")
         mark_session_for_closure(session_uid)
 
 
@@ -146,12 +146,12 @@ class ButtonHandler(tornado.web.RequestHandler):
 
     def get(self):
         # TODO: Fail gracefully
-        session_uid = self.get_cookie("session-uid")
+        session_uid = self.get_argument("session-uid")
         mark_session_for_updates(session_uid)
 
     def post(self):
         logging.debug("Updating on the next cycle.")
-        session_uid = self.get_cookie("session-uid")
+        session_uid = self.get_argument("session-uid")
         print(session_uid)
         mark_session_for_updates(session_uid)
 

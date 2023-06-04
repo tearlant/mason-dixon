@@ -37,8 +37,8 @@ def bokeh_app(doc, cfg, data_provider: DataProvider):
     box_factor = cfg["box_factor"]
     city_box_proportion = cfg["city_box_proportion"]
 
-    city_array = data_provider.cities_dataframe_mercator
-    region_array = data_provider.region_dataframe
+    city_array = data_provider.cities_dataframe_mercator.copy(deep=True)
+    region_array = data_provider.region_dataframe.copy(deep=True)
 
     request_counter = 0
     last_response_received = 0

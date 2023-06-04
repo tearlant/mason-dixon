@@ -88,7 +88,7 @@
 
         function setOptions(currentForm) {
             var form = collectData(currentForm);
-            form.append("session-uid", getCookie("session-uid"))
+            form.append("session-uid", sessionStorage.getItem("session-guid"))
             return { method: "post", mode: "no-cors", body: form, credentials: "include" };
         }
 
@@ -106,13 +106,17 @@
         form.addEventListener('submit', onSubmit);
 
         // Maybe overkill, since it fires when navigating out/refreshing
-        window.onbeforeunload = closingCode;
+											
         function closingCode() {
             var req_body = new FormData();
             req_body.append("session-uid", getCookie("session-uid"))
             fetch("http://localhost:8888/exit", { method: "post", mode:"no-cors", body: req_body, credentials: "include" });
             return null;
         }
+        window.onbeforeunload = closingCode;
+
+        sessionStorage.setItem("session-guid", "{{ guid }}");
+        console.log(sessionStorage.getItem("session-guid"));
     </script>
 </body>
 </html>
