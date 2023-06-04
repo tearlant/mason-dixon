@@ -110,7 +110,7 @@
         function closingCode() {
             var req_body = new FormData();
             req_body.append("session-uid", getCookie("session-uid"))
-            fetch("https://www.tearlant.com/mason-dixon/exit", { method: "post", mode:"no-cors", body: req_body, credentials: "include" });
+            fetch("http://localhost:8888/exit", { method: "post", mode:"no-cors", body: req_body, credentials: "include" });
             return null;
         }
     </script>
