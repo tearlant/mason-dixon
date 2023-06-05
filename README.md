@@ -27,6 +27,16 @@ MasonDixon is a geographic engine that combines geospatial, mathematical, and st
 
 To demonstrate the algorithm, a simple app has been built. The prototype is hosted at www.tearlant.com/mason-dixon
 
+After the data loads, the map should be displayed with an overlay coloured according to the dataset:
+
+![image](https://github.com/tearlant/mason-dixon/assets/105062729/7e34f3d3-2f7b-4ea7-bf29-6ec2cfefee49)
+
+By panning or zooming in/out, the map will dynamically redraw regions and re-visualize the data, based on which cities are now in the current field of view:
+
+![image](https://github.com/tearlant/mason-dixon/assets/105062729/7092da03-88a0-4358-bbb3-2facd4943fd5)
+
+------------------------------------
+
 The app generates a set of random municipal data for all cities in the Natural Earth data set. This could easily be replaced with a numerical variable, such as the cost of the average hotel room in the region. (Most travel APIs do not offer this data for free, so I defer the creation of a travel app to the future).
 
 The app then colours the map's field of view in a way that accurately visualizes the data. When the user is zooming and panning on the map, regions are dynamically divided and coloured based on the current field of view. The main algorithm divides the map so that there are never too many population centres in a single region.
