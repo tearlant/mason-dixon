@@ -33,7 +33,7 @@ The app then colours the map's field of view in a way that accurately visualizes
 
 ------------------------------------
 
-The algorithm takes a list of (latitude, longitude) pairs, e.g. a list of global cities, hotels, offices, etc. A numerical value is applied to each entry in the list, and an aggregating function (usually linear regression or population-weighting) is used to determine the aggregate value for the region.
+After the map has been divided, the colouring algorithm takes a list of (latitude, longitude) pairs, e.g. a list of global cities, hotels, offices, etc., each of which has an associated numerical value. An aggregating function (such as linear regression or population-weighting) is then used to determine one overall value for the region, which determines its colour.
 
 In the demo, if the user clicks the "Update Data" button, the values in the database will be updated (just adding random perturbations to existing values), and the new values will propagate to the map. In particular, these values are updated asynchronously, so the update could be easily swapped out with any web API call. For example, MasonDixon could be used to build an app that dynamically scrapes the average fare to fly to an airport or the average price of a hotel room in a city.
 
