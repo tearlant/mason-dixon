@@ -17,7 +17,7 @@ Once the environment is properly set up, the demo should run on port 8888.
 
 Welcome to the prototype of MasonDixon.
 
-In all fields of data visualization, a challenge is to avoid plots that are misleading but technically accurate. This algorithm specifically addresses one such example in geospatial data analysis.
+In all fields of data visualization, a challenge is to avoid plots that are misleading but technically accurate. This algorithm grapples with one such challenge in geospatial data analysis.
 
 When colouring a map according to a variable (for example, per capita income or the average cost of a hotel per region), it is not trivial to divide a map optimally. On the one hand, we do not want too many large regions without cities. Conversely, if too many cities or population centres are bunched into a single region, it can skew statistics and make the map misleading.
 
@@ -29,7 +29,7 @@ To demonstrate the algorithm, a simple app has been built. The prototype is host
 
 The app generates a set of random municipal data for all cities in the Natural Earth data set. This could easily be replaced with a numerical variable, such as the cost of the average hotel room in the region. (Most travel APIs do not offer this data for free, so I defer the creation of a travel app to the future).
 
-The app then colours the map's field of view in a way that accurately visualizes the data. When the user is zooming and panning on the map, regions are dynamically divided and coloured based on the current field of view. The main algorithm ensures that there are not too many population centres in a single region of the map.
+The app then colours the map's field of view in a way that accurately visualizes the data. When the user is zooming and panning on the map, regions are dynamically divided and coloured based on the current field of view. The main algorithm divides the map so that there are never too many population centres in a single region.
 
 ------------------------------------
 
